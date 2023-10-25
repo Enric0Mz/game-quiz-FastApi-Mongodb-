@@ -1,5 +1,6 @@
 import random
 
+from odmantic import query
 from datetime import datetime
 
 from src.database.connection import DbConnectionHandler
@@ -28,4 +29,16 @@ class CreateQuestionUseCase:
             CreateQuestionSchema(
                 created_at=datetime.now(), **self._payload.dict()
             )
-        )        
+        )
+
+
+class DeleteQuestionUseCase:
+    def __init__(self, question_id: str, context: DbConnectionHandler) -> None:
+        self._repository = QuestionRepository(context)
+        self._question_id: question_id
+
+    async def execute(self):
+        return await self._repository.delete(
+            query.eq(Question.id, self._question_id)
+        )
+    
