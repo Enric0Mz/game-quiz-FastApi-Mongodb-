@@ -23,10 +23,22 @@ class QuestionRepository(Repository):
             Question, filter
         )
         return [self.to_dto(item) for item in result if item is not None]
+    
+
+    async def get(self, filter: QueryExpression):
+        result = await self.context.acquire_session().find_one(
+            Question, filter
+        )
+        if result:
+            return self.to_dto(result)
+        return self.does_not_exist
 
 
     async def create(self, payload: QuestionSchema):
-        result = await self.context.acquire_session().save(
+        return await self.context.acquire_session().save(
             Question(**payload.dict())
         )
-        return result
+
+
+    async def delete(self, filter: QueryExpression):
+        return await self.context.acquire_session().remove(Question, filter)
