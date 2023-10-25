@@ -41,4 +41,4 @@ class QuestionRepository(Repository):
 
 
     async def delete(self, filter: QueryExpression):
-        return await self.context.acquire_session().remove(Question, filter)
+        await self.context.acquire_session().remove(Question, filter)

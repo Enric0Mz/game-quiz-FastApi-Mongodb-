@@ -35,10 +35,9 @@ class CreateQuestionUseCase:
 class DeleteQuestionUseCase:
     def __init__(self, question_id: str, context: DbConnectionHandler) -> None:
         self._repository = QuestionRepository(context)
-        self._question_id: question_id
+        self._question_id = question_id
 
     async def execute(self):
-        return await self._repository.delete(
+        await self._repository.delete(
             query.eq(Question.id, self._question_id)
         )
-    
