@@ -5,7 +5,7 @@ from datetime import datetime
 
 from src.database.connection import DbConnectionHandler
 from src.database.repositories.question import QuestionRepository
-from src.schemas.question import QuestionSchema, CreateQuestionSchema
+from src.schemas import question as schemas
 from src.models.question import Question
 
 
@@ -20,13 +20,13 @@ class GetRandonQuestionUseCase:
 
 
 class CreateQuestionUseCase:
-    def __init__(self, payload: QuestionSchema, context: DbConnectionHandler) -> None:
+    def __init__(self, payload: schemas.QuestionSchema, context: DbConnectionHandler) -> None:
         self._repostitory = QuestionRepository(context)
         self._payload = payload
 
     async def execute(self):
         return await self._repostitory.create(
-            CreateQuestionSchema(
+            schemas.CreateQuestionSchema(
                 created_at=datetime.now(), **self._payload.dict()
             )
         )
@@ -41,3 +41,13 @@ class DeleteQuestionUseCase:
         await self._repository.delete(
             query.eq(Question.id, self._question_id)
         )
+
+
+class UpdateQuestionUseCase:
+    def __init__(self, question_id: str, context: DbConnectionHandler, payload: schemas.UpdateQuestionSchema) -> None:
+        self._repository = QuestionRepository(context)
+        self._question_id = question_id
+        self._payload = payload
+
+    async def execute(self):
+        return await self._repository.update(query.eq(Question.id, self._question_id), self._payload)
