@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: game-api
+    ports:
+      - 8000:8000
+    environment:
+      - USERNAME=root
+      - PASSWORD=test@123
+      - DB_NAME=quizGame
+      - DB_HOST=mongodb
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    restart: always
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_DATABASE: employees_game
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: test@123
+    ports:
+      - 27017:27017
