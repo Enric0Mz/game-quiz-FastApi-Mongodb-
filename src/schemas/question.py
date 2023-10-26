@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pydantic import Field
 from enum import Enum
@@ -52,3 +53,9 @@ class QuestionPayloadSchema(BaseSchema):
     question: str
     choices: list[ExtendedQuestionChoiceSchema]
     question_type: QuestionTypeSchema
+
+
+class UpdateQuestionSchema(BaseSchema):
+    question: Optional[str]
+    choices: Optional[list[ExtendedQuestionChoiceSchema]]
+    question_type: Optional[QuestionTypeSchema]
